@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 import aiohttp
 
-from query import VARIABLES, QUERY
+from constants import OPERATION_NAME, QUERY, VARIABLES
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -20,7 +20,7 @@ class Query:
 async def main():
     url = "https://www.lego.com/api/graphql/ContentPageQuery"
     query = Query(
-        operationName="ContentPageQuery",
+        operationName=OPERATION_NAME,
         query=QUERY,
         variables=VARIABLES,
     )

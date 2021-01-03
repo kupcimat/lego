@@ -1,3 +1,5 @@
+OPERATION_NAME = "ContentPageQuery"
+
 VARIABLES = {
     "page": 1,
     "isPaginated": False,
@@ -7,7 +9,8 @@ VARIABLES = {
     "slug": "/categories/new-sets-and-products",
 }
 
-QUERY = """query ContentPageQuery($slug: String!, $perPage: Int, $page: Int, $isPaginated: Boolean!, $sort: SortInput, $filters: [Filter!]) {
+QUERY = """\
+query ContentPageQuery($slug: String!, $perPage: Int, $page: Int, $isPaginated: Boolean!, $sort: SortInput, $filters: [Filter!]) {
   contentPage(slug: $slug) {
     id
     analyticsGroup
