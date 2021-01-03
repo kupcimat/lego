@@ -1,4 +1,5 @@
 import asyncio
+import csv
 import logging
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, List
@@ -6,6 +7,7 @@ from typing import Any, Dict, List
 import aiohttp
 
 from constants import OPERATION_NAME, QUERY, query_variables
+from utils import field_names
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -27,6 +29,7 @@ class Product:
     price: int
     price_text: str
     currency: str
+    country: str
 
 
 def extract_products(json_data: Any) -> List[Product]:
@@ -47,9 +50,17 @@ def extract_products(json_data: Any) -> List[Product]:
             price=product["variant"]["price"]["centAmount"],
             price_text=product["variant"]["price"]["formattedAmount"],
             currency=product["variant"]["price"]["currencyCode"],
+            country="CZ",
         )
         for product in products
     ]
+
+
+def write_to_csv(products: List[Product], file_name: str):
+    with open(file_name, "w") as file:
+        csv_writer = csv.DictWriter(file, fieldnames=field_names(Product))
+        csv_writer.writeheader()
+        csv_writer.writerows([asdict(product) for product in products])
 
 
 async def main():
@@ -71,8 +82,7 @@ async def main():
             logging.info(f"action=get-data status={response.status}")
             data = await response.json()
             products = extract_products(data)
-            for product in products:
-                print(product)
+            write_to_csv(products, "out.csv")
 
 
 asyncio.run(main())
