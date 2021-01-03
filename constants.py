@@ -1,13 +1,15 @@
-OPERATION_NAME = "ContentPageQuery"
+def query_variables(page: int, limit: int = 10):
+    return {
+        "page": page + 1,  # page index starts at 1
+        "perPage": limit,
+        "isPaginated": False,
+        "slug": "/categories/new-sets-and-products",
+        "sort": {"key": "FEATURED", "direction": "DESC"},
+        "filters": [],
+    }
 
-VARIABLES = {
-    "page": 1,
-    "isPaginated": False,
-    "perPage": 18,
-    "sort": {"key": "FEATURED", "direction": "DESC"},
-    "filters": [],
-    "slug": "/categories/new-sets-and-products",
-}
+
+OPERATION_NAME = "ContentPageQuery"
 
 QUERY = """\
 query ContentPageQuery($slug: String!, $perPage: Int, $page: Int, $isPaginated: Boolean!, $sort: SortInput, $filters: [Filter!]) {

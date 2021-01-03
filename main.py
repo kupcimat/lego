@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 import aiohttp
 
-from constants import OPERATION_NAME, QUERY, VARIABLES
+from constants import OPERATION_NAME, QUERY, query_variables
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -22,7 +22,7 @@ async def main():
     query = Query(
         operationName=OPERATION_NAME,
         query=QUERY,
-        variables=VARIABLES,
+        variables=query_variables(page=0, limit=10),
     )
     headers = {
         "Accept": "application/json",
