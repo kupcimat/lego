@@ -33,8 +33,7 @@ async def main():
 
     async with aiohttp.ClientSession() as session:
         async with session.post(url, json=asdict(query), headers=headers) as response:
-
-            # print("Status:", response.status)
+            logging.info(f"action=get-data status={response.status}")
             data = await response.text()
             print(data)
 
