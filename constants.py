@@ -1,4 +1,4 @@
-def query_variables(page: int, limit: int = 10):
+def query_variables(page: int, limit: int):
     return {
         "page": page + 1,  # page index starts at 1
         "perPage": limit,

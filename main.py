@@ -4,7 +4,7 @@ import logging
 from dataclasses import asdict, dataclass
 from typing import Any, Dict, List
 
-import aiohttp
+from aiohttp import ClientSession
 
 from constants import OPERATION_NAME, QUERY, query_variables
 from utils import field_names
@@ -63,12 +63,12 @@ def write_to_csv(products: List[Product], file_name: str):
         csv_writer.writerows([asdict(product) for product in products])
 
 
-async def main():
+async def download_page(session: ClientSession, page: int, limit: int) -> List[Product]:
     url = "https://www.lego.com/api/graphql/ContentPageQuery"
     query = Query(
         operationName=OPERATION_NAME,
         query=QUERY,
-        variables=query_variables(page=0, limit=10),
+        variables=query_variables(page, limit),
     )
     headers = {
         "Accept": "application/json",
@@ -77,12 +77,18 @@ async def main():
         "x-lego-request-id": "my-request-id",
     }
 
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url, json=asdict(query), headers=headers) as response:
-            logging.info(f"action=get-data status={response.status}")
-            data = await response.json()
-            products = extract_products(data)
-            write_to_csv(products, "out.csv")
+    async with session.post(url, json=asdict(query), headers=headers) as response:
+        logging.info(
+            f"action=download page={page} limit={limit} status={response.status}"
+        )
+        data = await response.json()
+        return extract_products(data)
+
+
+async def main():
+    async with ClientSession() as session:
+        products = await download_page(session, page=0, limit=10)
+        write_to_csv(products, "out.csv")
 
 
 asyncio.run(main())
