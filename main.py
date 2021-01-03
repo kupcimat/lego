@@ -47,7 +47,7 @@ def extract_products(json_data: Any) -> List[Product]:
             availability=product["variant"]["attributes"]["availabilityStatus"],
             availability_text=product["variant"]["attributes"]["availabilityText"],
             max_order_quantity=product["variant"]["attributes"]["maxOrderQuantity"],
-            price=product["variant"]["price"]["centAmount"],
+            price=product["variant"]["price"]["centAmount"] / 100,
             price_text=product["variant"]["price"]["formattedAmount"],
             currency=product["variant"]["price"]["currencyCode"],
             country="CZ",
