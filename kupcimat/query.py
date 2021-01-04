@@ -4,7 +4,11 @@ from typing import Any, Dict
 
 
 class Country(Enum):
-    CZ = "cs-CZ"
+    CZ = "en-CZ"
+    DE = "en-DE"
+    GB = "en-GB"
+    SK = "en-SK"
+    US = "en-US"
 
 
 @dataclass
