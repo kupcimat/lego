@@ -85,9 +85,16 @@ async def download_page(session: ClientSession, page: int, limit: int) -> List[P
         return extract_products(data)
 
 
+async def download_products(session: ClientSession, page: int = 0) -> List[Product]:
+    products = await download_page(session, page, limit=20)
+    if len(products) == 0:
+        return products
+    return products + await download_products(session, page + 1)
+
+
 async def main():
     async with ClientSession() as session:
-        products = await download_page(session, page=0, limit=10)
+        products = await download_products(session)
         write_to_csv(products, "out.csv")
 
 
