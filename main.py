@@ -95,7 +95,7 @@ async def download_products(session: ClientSession, page: int = 0) -> List[Produ
 async def main():
     async with ClientSession() as session:
         products = await download_products(session)
-        write_to_csv(products, "out.csv")
+        write_to_csv(products, "products.csv")
 
 
 asyncio.run(main())
