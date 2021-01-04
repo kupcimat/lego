@@ -1,15 +1,42 @@
-def query_variables(page: int, limit: int):
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Dict
+
+
+class Country(Enum):
+    CZ = "cs-CZ"
+
+
+@dataclass
+class Query:
+    operationName: str
+    query: str
+    variables: Dict[str, Any]
+
+
+def create_query(page: int, limit: int) -> Query:
+    return Query(
+        operationName="ContentPageQuery",
+        query=QUERY,
+        variables={
+            "page": page + 1,  # page index starts at 1
+            "perPage": limit,
+            "isPaginated": False,
+            "slug": "/categories/new-sets-and-products",
+            "sort": {"key": "FEATURED", "direction": "DESC"},
+            "filters": [],
+        },
+    )
+
+
+def create_headers(country: Country) -> Dict[str, str]:
     return {
-        "page": page + 1,  # page index starts at 1
-        "perPage": limit,
-        "isPaginated": False,
-        "slug": "/categories/new-sets-and-products",
-        "sort": {"key": "FEATURED", "direction": "DESC"},
-        "filters": [],
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "x-locale": country.value,
+        "x-lego-request-id": "my-request-id",
     }
 
-
-OPERATION_NAME = "ContentPageQuery"
 
 QUERY = """\
 query ContentPageQuery($slug: String!, $perPage: Int, $page: Int, $isPaginated: Boolean!, $sort: SortInput, $filters: [Filter!]) {

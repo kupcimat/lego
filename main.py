@@ -6,17 +6,10 @@ from typing import Any, Dict, List
 
 from aiohttp import ClientSession
 
-from constants import OPERATION_NAME, QUERY, query_variables
-from utils import field_names
+from kupcimat.query import Country, create_headers, create_query
+from kupcimat.utils import field_names
 
 logging.basicConfig(level=logging.DEBUG)
-
-
-@dataclass
-class Query:
-    operationName: str
-    query: str
-    variables: Dict[str, Any]
 
 
 @dataclass
@@ -32,7 +25,7 @@ class Product:
     country: str
 
 
-def extract_products(json_data: Any) -> List[Product]:
+def extract_products(json_data: Any, country: Country) -> List[Product]:
     sections = [
         section
         for section in json_data["data"]["contentPage"]["sections"]
@@ -50,7 +43,7 @@ def extract_products(json_data: Any) -> List[Product]:
             price=product["variant"]["price"]["centAmount"] / 100,
             price_text=product["variant"]["price"]["formattedAmount"],
             currency=product["variant"]["price"]["currencyCode"],
-            country="CZ",
+            country=country.name,
         )
         for product in products
     ]
@@ -63,38 +56,34 @@ def write_to_csv(products: List[Product], file_name: str):
         csv_writer.writerows([asdict(product) for product in products])
 
 
-async def download_page(session: ClientSession, page: int, limit: int) -> List[Product]:
+async def download_page(
+    session: ClientSession, country: Country, page: int
+) -> List[Product]:
     url = "https://www.lego.com/api/graphql/ContentPageQuery"
-    query = Query(
-        operationName=OPERATION_NAME,
-        query=QUERY,
-        variables=query_variables(page, limit),
-    )
-    headers = {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "x-locale": "cs-CZ",
-        "x-lego-request-id": "my-request-id",
-    }
+    query = create_query(page, limit=20)
+    headers = create_headers(country)
 
     async with session.post(url, json=asdict(query), headers=headers) as response:
         logging.info(
-            f"action=download page={page} limit={limit} status={response.status}"
+            f"action=download country={country.name} page={page} status={response.status}"
         )
         data = await response.json()
-        return extract_products(data)
+        return extract_products(data, country)
 
 
-async def download_products(session: ClientSession, page: int = 0) -> List[Product]:
-    products = await download_page(session, page, limit=20)
+async def download_products(
+    session: ClientSession, country: Country, page: int = 0
+) -> List[Product]:
+    products = await download_page(session, country, page)
     if len(products) == 0:
         return products
-    return products + await download_products(session, page + 1)
+    else:
+        return products + await download_products(session, country, page + 1)
 
 
 async def main():
     async with ClientSession() as session:
-        products = await download_products(session)
+        products = await download_products(session, Country.CZ)
         write_to_csv(products, "products.csv")
 
 
