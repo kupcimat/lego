@@ -36,7 +36,7 @@ def extract_products(json_data: Any) -> List[Product]:
     sections = [
         section
         for section in json_data["data"]["contentPage"]["sections"]
-        if section["__typename"] == "DisruptorProductSection"
+        if "products" in section
     ]
     products = sections[0]["products"]["results"]
 
