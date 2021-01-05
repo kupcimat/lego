@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Dict
 
@@ -11,18 +10,11 @@ class Country(Enum):
     US = "en-US"
 
 
-@dataclass
-class Query:
-    operationName: str
-    query: str
-    variables: Dict[str, Any]
-
-
-def create_query(page: int, limit: int) -> Query:
-    return Query(
-        operationName="ContentPageQuery",
-        query=QUERY,
-        variables={
+def create_query(page: int, limit: int) -> Dict[str, Any]:
+    return {
+        "operationName": "ContentPageQuery",
+        "query": QUERY,
+        "variables": {
             "page": page + 1,  # page index starts at 1
             "perPage": limit,
             "isPaginated": False,
@@ -30,7 +22,7 @@ def create_query(page: int, limit: int) -> Query:
             "sort": {"key": "FEATURED", "direction": "DESC"},
             "filters": [],
         },
-    )
+    }
 
 
 def create_headers(country: Country) -> Dict[str, str]:

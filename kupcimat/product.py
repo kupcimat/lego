@@ -1,5 +1,5 @@
 import logging
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from typing import Any, List
 
 from aiohttp import ClientSession
@@ -54,7 +54,7 @@ async def download_page(
     query = create_query(page, limit=DOWNLOAD_LIMIT)
     headers = create_headers(country)
 
-    async with session.post(url, json=asdict(query), headers=headers) as response:
+    async with session.post(url, json=query, headers=headers) as response:
         logging.info(
             f"action=download country={country.name} page={page} status={response.status}"
         )
