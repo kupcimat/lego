@@ -40,7 +40,7 @@ def extract_products(json_data: Any, country: Country) -> List[Product]:
             price=product["variant"]["price"]["centAmount"] / 100,
             price_text=product["variant"]["price"]["formattedAmount"],
             currency=product["variant"]["price"]["currencyCode"],
-            country=country.name,
+            country=country.code,
         )
         for product in products
     ]

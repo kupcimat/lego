@@ -22,7 +22,7 @@ def write_to_csv(products: List[Product], file_name: str):
 
 async def main():
     async with ClientSession() as session:
-        products = await download_products(session, Country.CZ)
+        products = await download_products(session, Country.CZECHIA)
         write_to_csv(products, "products.csv")
 
 

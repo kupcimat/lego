@@ -3,11 +3,44 @@ from typing import Any, Dict
 
 
 class Country(Enum):
-    CZ = "en-CZ"
-    DE = "en-DE"
-    GB = "en-GB"
-    SK = "en-SK"
-    US = "en-US"
+    # North America
+    CANADA = ("CA", "en-CA")
+    MEXICO = ("MX", "en-MX")
+    USA = ("US", "en-US")
+    # Europe
+    AUSTRIA = ("AT", "en-AT")
+    BELGIUM = ("BE", "en-BE")
+    CZECHIA = ("CZ", "en-CZ")
+    DENMARK = ("DK", "en-DK")
+    ESTONIA = ("EE", "en-EE")
+    FINLAND = ("FI", "en-FI")
+    FRANCE = ("FR", "en-FR")
+    GERMANY = ("DE", "en-DE")
+    GREECE = ("GR", "en-GR")
+    HUNGARY = ("HU", "en-HU")
+    IRELAND = ("IE", "en-IE")
+    ITALY = ("IT", "en-IT")
+    LATVIA = ("LV", "en-LV")
+    LITHUANIA = ("LT", "en-LT")
+    LUXEMBURG = ("LU", "en-LU")
+    NETHERLANDS = ("NL", "en-NL")
+    NORWAY = ("NO", "en-NO")
+    POLAND = ("PL", "en-PL")
+    PORTUGAL = ("PT", "en-PT")
+    SLOVAKIA = ("SK", "en-SK")
+    SLOVENIA = ("SI", "en-SI")
+    SPAIN = ("ES", "en-ES")
+    SWEDEN = ("SE", "en-SE")
+    SWITZERLAND = ("CH", "en-CH")
+    UNITED_KINGDOM = ("GB", "en-GB")
+    # Asia Pacific
+    AUSTRALIA = ("AU", "en-AU")
+    KOREA = ("KR", "ko-kr")
+    NEW_ZEALAND = ("NZ", "en-NZ")
+
+    def __init__(self, code: str, locale: str):
+        self.code = code
+        self.locale = locale
 
 
 def create_query(page: int, limit: int) -> Dict[str, Any]:
@@ -29,7 +62,7 @@ def create_headers(country: Country) -> Dict[str, str]:
     return {
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "x-locale": country.value,
+        "x-locale": country.locale,
         "x-lego-request-id": "my-request-id",
     }
 
