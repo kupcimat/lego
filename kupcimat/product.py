@@ -6,6 +6,8 @@ from aiohttp import ClientSession
 
 from kupcimat.query import Country, create_headers, create_query
 
+DOWNLOAD_LIMIT = 20
+
 
 @dataclass
 class Product:
@@ -49,7 +51,7 @@ async def download_page(
 ) -> List[Product]:
 
     url = "https://www.lego.com/api/graphql/ContentPageQuery"
-    query = create_query(page, limit=20)
+    query = create_query(page, limit=DOWNLOAD_LIMIT)
     headers = create_headers(country)
 
     async with session.post(url, json=asdict(query), headers=headers) as response:
