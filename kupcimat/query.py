@@ -35,7 +35,7 @@ class Country(Enum):
     UNITED_KINGDOM = ("GB", "en-GB")
     # Asia Pacific
     AUSTRALIA = ("AU", "en-AU")
-    KOREA = ("KR", "ko-kr")
+    KOREA = ("KR", "ko-KR")
     NEW_ZEALAND = ("NZ", "en-NZ")
 
     def __init__(self, code: str, locale: str):
