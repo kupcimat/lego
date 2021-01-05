@@ -62,7 +62,11 @@ async def download_page(
             f"action=download country={country.name} page={page} status={response.status}"
         )
         data = await response.json()
-        return extract_products(data, country)
+        try:
+            return extract_products(data, country)
+        except KeyError as error:
+            logging.error(await response.text())
+            raise error
 
 
 async def download_products(
