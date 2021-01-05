@@ -6,7 +6,7 @@ from typing import List
 
 from aiohttp import ClientSession
 
-from kupcimat.product import Product, download_products
+from kupcimat.product import Product, download_countries
 from kupcimat.query import Country
 from kupcimat.utils import field_names
 
@@ -22,7 +22,7 @@ def write_to_csv(products: List[Product], file_name: str):
 
 async def main():
     async with ClientSession() as session:
-        products = await download_products(session, Country.CZECHIA)
+        products = await download_countries(session, list(Country), concurrency=5)
         write_to_csv(products, "products.csv")
 
 

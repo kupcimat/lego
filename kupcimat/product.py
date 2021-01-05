@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from dataclasses import dataclass
 from typing import Any, List
@@ -5,6 +6,7 @@ from typing import Any, List
 from aiohttp import ClientSession
 
 from kupcimat.query import Country, create_headers, create_query
+from kupcimat.utils import flatten
 
 DOWNLOAD_LIMIT = 20
 
@@ -72,3 +74,23 @@ async def download_products(
         return products
     else:
         return products + await download_products(session, country, page + 1)
+
+
+async def download_countries(
+    session: ClientSession, country_list: List[Country], concurrency: int
+) -> List[Product]:
+    country_lists = [
+        country_list[i : i + concurrency]
+        for i in range(0, len(country_list), concurrency)
+    ]
+
+    product_lists = []
+    for countries in country_lists:
+        download_tasks = [
+            asyncio.create_task(download_products(session, country))
+            for country in countries
+        ]
+        products = [await task for task in download_tasks]
+        product_lists.extend(products)
+
+    return flatten(product_lists)
