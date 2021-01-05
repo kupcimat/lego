@@ -43,6 +43,7 @@ def extract_products(json_data: Any, country: Country) -> List[Product]:
             country=country.code,
         )
         for product in products
+        if "variant" in product  # skip multi-variant products (clothing)
     ]
 
 
