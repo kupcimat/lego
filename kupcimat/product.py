@@ -18,7 +18,7 @@ class Product:
     availability: str
     availability_text: str
     max_order_quantity: int
-    price: int
+    price: float
     price_text: str
     currency: str
     country: str
