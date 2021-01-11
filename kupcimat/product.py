@@ -5,6 +5,7 @@ from typing import Any, List
 
 from aiohttp import ClientSession
 
+from kupcimat.currency import ExchangeRates
 from kupcimat.query import Country, create_headers, create_query
 from kupcimat.utils import flatten
 
@@ -22,6 +23,10 @@ class Product:
     price_text: str
     currency: str
     country: str
+    price_normalized: float = 0.0
+
+    def normalize_price(self, exchange_rates: ExchangeRates):
+        self.price_normalized = self.price / exchange_rates.rates[self.currency]
 
 
 def extract_products(json_data: Any, country: Country) -> List[Product]:

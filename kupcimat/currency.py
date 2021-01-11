@@ -14,8 +14,7 @@ class ExchangeRates:
     def __init__(self, base: str, date: str, rates: Dict[str, float]):
         self.base = base
         self.date = date
-        self.rates = defaultdict(lambda: 0.0, rates)
-        self.rates[self.base] = 1.0
+        self.rates = defaultdict(lambda: 1.0, rates)
 
 
 def extract_rates(json_data: Any) -> ExchangeRates:
